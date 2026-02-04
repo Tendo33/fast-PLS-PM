@@ -1,4 +1,4 @@
-# Bio-Test 项目 - PLS-PM/SEM 生物数据分析工具
+# fast-PLS-PM - PLS-PM/SEM 生物数据分析工具
 
 本项目是一个**配置驱动的统计分析工具**，专门用于分析生物实验数据中的因果关系，特别适合研究处理剂量与多个生理指标之间的关系。
 
@@ -68,7 +68,7 @@ cd bio_test
 
 ```bash
 # 进入项目目录
-cd bio_test
+cd fast-PLS-PM
 
 # 安装所有依赖包
 uv sync
@@ -748,18 +748,22 @@ uv pip install pyyaml
 ### 项目文件说明
 
 ```
-bio_test/
+fast-PLS-PM/
 ├── analyze_pls.py          # 主分析脚本
 ├── config.yaml             # 你的配置文件（需自己创建）
 ├── config.example.yaml     # 配置模板（有详细注释）
 ├── README.md               # 本文档
-├── PLS-剂量实验.xlsx       # 示例数据文件
-├── pls_pm_report.md        # 分析结果报告（运行后生成）
+├── data/                   # 数据文件目录
+│   └── PLS-剂量实验.xlsx   # 示例数据文件
+├── output/                 # 输出目录
+│   └── pls_pm_report.md    # 分析结果报告（运行后生成）
+├── template/               # 配置模板目录
+│   └── config.yaml         # 配置文件示例
 └── .venv/                  # Python 虚拟环境（自动创建）
 ```
 
 ---
 
-**最后更新：** 2024-02-04  
-**版本：** 1.0  
-**作者：** Bio-Test Project Team
+**最后更新：** 2026-02-04  
+**版本：** 1.1  
+**项目：** fast-PLS-PM

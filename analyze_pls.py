@@ -53,8 +53,8 @@ def load_config(config_path='config.yaml'):
     config_file = Path(config_path)
     
     if not config_file.exists():
-        print(f"错误：配置文件 '{config_path}' 未找到。")
-        print(f"请复制 'config.example.yaml' 为 '{config_path}' 并根据你的数据进行配置。")
+        print(f"\n❌ 错误：配置文件 '{config_path}' 未找到。")
+        print(f"💡 请复制 'config.example.yaml' 为 '{config_path}' 并根据你的数据进行配置。")
         sys.exit(1)
     
     try:
@@ -63,19 +63,20 @@ def load_config(config_path='config.yaml'):
         
         # 验证必需的配置项
         required_keys = ['data', 'column_mapping', 'latent_variables', 'paths', 'output']
-        for key in required_keys:
-            if key not in config:
-                print(f"错误：配置文件缺少必需的键: '{key}'")
-                sys.exit(1)
+        missing_keys = [key for key in required_keys if key not in config]
         
-        print(f"成功加载配置文件: {config_path}")
+        if missing_keys:
+            print(f"\n❌ 错误：配置文件缺少必需的键: {', '.join(missing_keys)}")
+            sys.exit(1)
+        
+        print(f"✓ 成功加载配置文件: {config_path}")
         return config
     
     except yaml.YAMLError as e:
-        print(f"错误：配置文件格式错误: {e}")
+        print(f"\n❌ 错误：配置文件格式错误:\n{e}")
         sys.exit(1)
     except Exception as e:
-        print(f"错误：无法读取配置文件: {e}")
+        print(f"\n❌ 错误：无法读取配置文件: {e}")
         sys.exit(1)
 
 
@@ -84,9 +85,14 @@ def save_results_to_markdown(results_dict, output_file='pls_pm_report.md'):
     将结果保存到带有详细解释的 Markdown 文件中。
     results_dict: {部分名称: 数据框} 的字典
     """
-    print(f"\n正在生成 Markdown 报告: {output_file}...")
+    output_path = Path(output_file)
+    
+    # 自动创建输出目录
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    
+    print(f"\n📝 正在生成 Markdown 报告: {output_file}...")
     try:
-        with open(output_file, 'w', encoding='utf-8') as f:
+        with open(output_path, 'w', encoding='utf-8') as f:
             f.write("# PLS-PM / SEM 分析报告\n\n")
             f.write("此报告由生物实验数据分析脚本自动生成。报告详细说明了各项统计指标及其生物学意义。\n\n")
             
@@ -160,9 +166,9 @@ def save_results_to_markdown(results_dict, output_file='pls_pm_report.md'):
                     f.write("| **total** | 总效应 | 直接效应 + 间接效应。反映一个变量对另一个变量的总影响力强度。 |\n")
                 
                 f.write("\n---\n\n")
-        print("报告生成成功。")
+        print(f"✓ 报告生成成功: {output_path.absolute()}")
     except Exception as e:
-        print(f"生成报告失败: {e}")
+        print(f"❌ 生成报告失败: {e}")
 
 def main(config_path='config.yaml'):
     """
@@ -171,24 +177,29 @@ def main(config_path='config.yaml'):
     Args:
         config_path: YAML 配置文件路径，默认为 'config.yaml'
     """
+    print("\n" + "="*60)
+    print("  fast-PLS-PM 分析工具")
+    print("="*60)
+    
     # 加载配置
     cfg = load_config(config_path)
     
     # 读取数据
-    print("正在加载数据...")
+    print("\n📂 正在加载数据...")
     data_file = cfg['data']['file_path']
     header = cfg['data'].get('header', None)
     data_start_row = cfg['data'].get('data_start_row', 1)
     
     try:
         df = pd.read_excel(data_file, header=header)
+        print(f"✓ 成功读取数据文件: {data_file}")
     except Exception as e:
-        print(f"读取文件错误: {e}")
+        print(f"\n❌ 读取文件错误: {e}")
         print(f"请检查配置文件中的 data.file_path 是否正确: {data_file}")
         return
 
     # 数据预处理
-    print("正在预处理数据...")
+    print("\n🔧 正在预处理数据...")
     
     # 提取数据部分（从配置的起始行开始）
     data = df.iloc[data_start_row:].copy()
@@ -216,15 +227,16 @@ def main(config_path='config.yaml'):
     original_len = len(data)
     data = data.dropna()
     if len(data) < original_len:
-        print(f"已删除 {original_len - len(data)} 行包含缺失值的数据。")
+        print(f"  ✓ 已删除 {original_len - len(data)} 行包含缺失值的数据")
 
     if data.empty:
-        print("错误：清洗后没有剩余数据。")
+        print("\n❌ 错误：清洗后没有剩余数据。")
         return
 
-    print(f"数据形状: {data.shape}")
+    print(f"  ✓ 数据形状: {data.shape} (行数×列数)")
     
     # 从配置构建路径模型
+    print("\n🔗 正在构建路径模型...")
     latent_vars = cfg['latent_variables']
     lvs = [lv['name'] for lv in latent_vars]
     path_matrix = pd.DataFrame(0, index=lvs, columns=lvs)
@@ -234,9 +246,9 @@ def main(config_path='config.yaml'):
         if target in lvs and source in lvs:
             path_matrix.loc[target, source] = 1
         else:
-            print(f"警告：路径 {source} -> {target} 中的变量不在潜变量列表中")
+            print(f"  ⚠️  警告：路径 {source} -> {target} 中的变量不在潜变量列表中")
         
-    print("路径矩阵已定义。")
+    print(f"  ✓ 路径矩阵已定义 ({len(cfg['paths'])} 条路径)")
 
     # 配置 PLS-PM
     plspm_config = Config(path_matrix, scaled=True)
@@ -249,31 +261,32 @@ def main(config_path='config.yaml'):
         plspm_config.add_lv(lv_name, mode, *indicators)
     
     # 检查方差
-    print("正在检查方差...")
+    print("\n🔍 正在检查数据质量...")
     low_var_cols = []
     for col in data.columns:
         if data[col].std() == 0:
-            print(f"警告：列 {col} 方差为零。")
+            print(f"  ⚠️  警告：列 {col} 方差为零")
             low_var_cols.append(col)
             
     if low_var_cols:
-        print("移除零方差列会破坏上面定义的模型结构。")
-        # Proceeding hoping for the best or erroring out
+        print(f"  ⚠️  发现 {len(low_var_cols)} 列零方差数据，可能影响分析结果")
+    else:
+        print("  ✓ 数据质量检查通过")
     
     # 尝试 PLS-PM
-    print("正在运行 PLS-PM（尝试 1）...")
+    print("\n🚀 正在运行 PLS-PM 分析...")
     success = False
     report_file = cfg['output'].get('report_file', 'pls_pm_report.md')
     
     try:
         # 首先尝试不使用 scheme（默认值）
         plspm_calc = Plspm(data, plspm_config)
-        print("PLS-PM 计算完成。")
+        print("  ✓ PLS-PM 计算完成")
         success = True
         
-        print("\n" + "="*30)
-        print("PLS-PM 结果")
-        print("="*30)
+        print("\n" + "="*60)
+        print("  PLS-PM 分析结果")
+        print("="*60)
         
         print("\n--- 内部模型路径系数 (关系) ---")
         print(plspm_calc.inner_model())
