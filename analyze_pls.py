@@ -395,5 +395,5 @@ def main(config_path='config.yaml'):
 if __name__ == "__main__":
     # 支持通过命令行参数指定配置文件
     # 用法: python analyze_pls.py [config.yaml]
-    config_file = sys.argv[1] if len(sys.argv) > 1 else 'config.yaml'
+    config_file = sys.argv[1] if len(sys.argv) > 1 else "template/config.yaml"
     main(config_file)

@@ -22,7 +22,7 @@ data:
   # 示例：
   #   相对路径："data/my_experiment.xlsx"
   #   绝对路径："/Users/username/Documents/experiment_data.xlsx"
-  file_path: "PLS-剂量实验.xlsx"
+  file_path: "data/PLS-剂量实验.xlsx"
   
   # 表头行设置（必需）
   # - null：表示文件没有表头，第一行就是数据
@@ -275,13 +275,13 @@ output:
   #   "pls_pm_report.md"
   #   "experiment_2024_results.md"
   #   "dose_response_analysis.md"
-  report_file: "pls_pm_report.md"
+  report_file: "output/pls_pm_report.md"
   
   # SEM 分析报告文件名（可选）
   # - 如果 PLS-PM 分析失败，程序会尝试 SEM 方法
   # - SEM 结果会保存到这个文件
   # - 通常不需要修改
-  sem_report_file: "sem_report.md"
+  sem_report_file: "output/sem_report.md"
 
 # ============================================================================
 # 配置完成！

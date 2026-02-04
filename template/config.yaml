@@ -3,7 +3,7 @@
 
 # 数据文件配置
 data:
-  file_path: "PLS-剂量实验.xlsx"
+  file_path: "data/PLS-剂量实验.xlsx"
   header: null
   data_start_row: 1
 
@@ -79,5 +79,5 @@ paths:
 
 # 输出配置
 output:
-  report_file: "pls_pm_report.md"
-  sem_report_file: "sem_report.md"
+  report_file: "output/pls_pm_report.md"
+  sem_report_file: "output/sem_report.md"
