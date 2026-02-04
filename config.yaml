@@ -1,0 +1,83 @@
+# PLS-PM 分析配置文件
+# 当前配置对应 PLS-剂量实验.xlsx
+
+# 数据文件配置
+data:
+  file_path: "PLS-剂量实验.xlsx"
+  header: null
+  data_start_row: 1
+
+# 列映射配置
+column_mapping:
+  1: "UroA_meas"
+  2: "Egg_1"
+  3: "Egg_2"
+  4: "LiverW_1"
+  5: "LiverW_2"
+  6: "FatW_1"
+  7: "FatW_2"
+  8: "SerumLip_1"
+  9: "SerumLip_2"
+  10: "SerumLip_3"
+  11: "LiverLip_1"
+  12: "LiverLip_2"
+  13: "LiverLip_3"
+  14: "LiverInj_meas"
+
+# 潜变量定义
+latent_variables:
+  - name: "UroA"
+    mode: "A"
+    indicators:
+      - "UroA_meas"
+  
+  - name: "Egg"
+    mode: "A"
+    indicators:
+      - "Egg_1"
+      - "Egg_2"
+  
+  - name: "LiverW"
+    mode: "A"
+    indicators:
+      - "LiverW_1"
+      - "LiverW_2"
+  
+  - name: "FatW"
+    mode: "A"
+    indicators:
+      - "FatW_1"
+      - "FatW_2"
+  
+  - name: "SerumLip"
+    mode: "A"
+    indicators:
+      - "SerumLip_1"
+      - "SerumLip_2"
+      - "SerumLip_3"
+  
+  - name: "LiverLip"
+    mode: "A"
+    indicators:
+      - "LiverLip_1"
+      - "LiverLip_2"
+      - "LiverLip_3"
+  
+  - name: "LiverInj"
+    mode: "A"
+    indicators:
+      - "LiverInj_meas"
+
+# 路径模型定义
+paths:
+  - ["UroA", "Egg"]
+  - ["UroA", "LiverW"]
+  - ["UroA", "FatW"]
+  - ["UroA", "SerumLip"]
+  - ["UroA", "LiverLip"]
+  - ["UroA", "LiverInj"]
+
+# 输出配置
+output:
+  report_file: "pls_pm_report.md"
+  sem_report_file: "sem_report.md"
