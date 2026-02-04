@@ -1,0 +1,143 @@
+# PLS-PM 分析配置文件
+# 当前配置对应 PLS-蛋鸡脂肪肝综合征.xlsx
+
+# 数据文件配置
+data:
+  file_path: "data/PLS-蛋鸡脂肪肝综合征.xlsx"
+  header: null  # 文件没有标准表头，第1-2行是分类说明
+  data_start_row: 2  # 从第3行（索引2）开始读取数据
+
+# 列映射配置
+# 第0列: sample, 第1列: High-fat, 第2列: Urolithin A addition
+column_mapping:
+  1: "HighFat"              # 第2列(B列)：高脂饮食标记
+  2: "UroA"                 # 第3列(C列)：尿石素A添加标记
+  3: "LayingRate_1"         # 第4列(D列)：产蛋率
+  4: "FeedToEgg_1"          # 第5列(E列)：料蛋比
+  5: "EggWeight_1"          # 第6列(F列)：蛋重
+  6: "LiverIndex_1"         # 第7列(G列)：肝脏指数
+  7: "AbdFatIndex_1"        # 第8列(H列)：腹脂指数
+  8: "GLS2_1"               # 第9列(I列)：谷氨酰胺合成酶2
+  9: "GDH_1"                # 第10列(J列)：谷氨酸脱氢酶
+  10: "GOGAT_1"             # 第11列(K列)：谷氨酸合酶
+  11: "Gln_1"               # 第12列(L列)：谷氨酰胺
+  12: "Glu_1"               # 第13列(M列)：谷氨酸
+  13: "aKG_1"               # 第14列(N列)：α-酮戊二酸
+  14: "TAOC_1"              # 第15列(O列)：总抗氧化能力
+  15: "TSOD_1"              # 第16列(P列)：总超氧化物歧化酶
+  16: "GSHPx_1"             # 第17列(Q列)：谷胱甘肽过氧化物酶
+  17: "IgA_1"               # 第18列(R列)：免疫球蛋白A
+  18: "TNFa_1"              # 第19列(S列)：肿瘤坏死因子α
+  19: "TC_1"                # 第20列(T列)：总胆固醇
+  20: "TG_1"                # 第21列(U列)：甘油三酯
+  21: "VLDLC_1"             # 第22列(V列)：极低密度脂蛋白胆固醇
+  22: "OilRedArea_1"        # 第23列(W列)：油红染色面积
+  23: "AST_1"               # 第24列(X列)：天冬氨酸转氨酶
+  24: "ALT_1"               # 第25列(Y列)：丙氨酸转氨酶
+  25: "LayingRate_2"        # 第26列(Z列)：产蛋率（脂肪肝综合征）
+  26: "LiverIndex_2"        # 第27列(AA列)：肝脏指数（脂肪肝综合征）
+  27: "AST_2"               # 第28列(AB列)：天冬氨酸转氨酶（脂肪肝综合征）
+  28: "TC_2"                # 第29列(AC列)：总胆固醇（脂肪肝综合征）
+  29: "TG_2"                # 第30列(AD列)：甘油三酯（脂肪肝综合征）
+  30: "IL6_2"               # 第31列(AE列)：白细胞介素6（脂肪肝综合征）
+  31: "TNFa_2"              # 第32列(AF列)：肿瘤坏死因子α（脂肪肝综合征）
+
+# 潜变量定义
+latent_variables:
+  # 自变量：尿石素A添加
+  - name: "UroA_Treatment"
+    mode: "A"
+    indicators:
+      - "UroA"
+  
+  # 产蛋性能
+  - name: "LayingPerformance"
+    mode: "A"
+    indicators:
+      - "LayingRate_1"
+      - "FeedToEgg_1"
+      - "EggWeight_1"
+  
+  # 肝脏和腹脂指数
+  - name: "LiverFatIndex"
+    mode: "A"
+    indicators:
+      - "LiverIndex_1"
+      - "AbdFatIndex_1"
+  
+  # 肝脏谷氨酸代谢
+  - name: "LiverGlutamateMetabolism"
+    mode: "A"
+    indicators:
+      - "GLS2_1"
+      - "GDH_1"
+      - "GOGAT_1"
+      - "Gln_1"
+      - "Glu_1"
+      - "aKG_1"
+  
+  # 肝脏抗氧化能力
+  - name: "LiverAntioxidant"
+    mode: "A"
+    indicators:
+      - "TAOC_1"
+      - "TSOD_1"
+      - "GSHPx_1"
+  
+  # 肝脏免疫功能
+  - name: "LiverImmune"
+    mode: "A"
+    indicators:
+      - "IgA_1"
+      - "TNFa_1"
+  
+  # 肝脏脂质代谢
+  - name: "LiverLipidMetabolism"
+    mode: "A"
+    indicators:
+      - "TC_1"
+      - "TG_1"
+      - "VLDLC_1"
+      - "OilRedArea_1"
+  
+  # 肝损伤
+  - name: "LiverInjury"
+    mode: "A"
+    indicators:
+      - "AST_1"
+      - "ALT_1"
+  
+  # 脂肪肝综合征
+  - name: "FattyLiverSyndrome"
+    mode: "A"
+    indicators:
+      - "LayingRate_2"
+      - "LiverIndex_2"
+      - "AST_2"
+      - "TC_2"
+      - "TG_2"
+      - "IL6_2"
+      - "TNFa_2"
+
+# 路径模型定义
+# 假设：尿石素A处理影响各项生理指标
+paths:
+  - ["UroA_Treatment", "LayingPerformance"]
+  - ["UroA_Treatment", "LiverFatIndex"]
+  - ["UroA_Treatment", "LiverGlutamateMetabolism"]
+  - ["UroA_Treatment", "LiverAntioxidant"]
+  - ["UroA_Treatment", "LiverImmune"]
+  - ["UroA_Treatment", "LiverLipidMetabolism"]
+  - ["UroA_Treatment", "LiverInjury"]
+  - ["UroA_Treatment", "FattyLiverSyndrome"]
+  
+  # 可选：添加中介路径（如果认为某些指标之间存在因果关系）
+  # 例如：脂质代谢影响肝损伤
+  # - ["LiverLipidMetabolism", "LiverInjury"]
+  # 例如：肝损伤影响脂肪肝综合征
+  # - ["LiverInjury", "FattyLiverSyndrome"]
+
+# 输出配置
+output:
+  report_file: "output/pls_pm_report_fatty_liver.md"
+  sem_report_file: "output/sem_report_fatty_liver.md"
