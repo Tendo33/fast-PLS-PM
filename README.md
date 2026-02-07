@@ -24,7 +24,7 @@ uv sync
 ```bash
 # 1. 将你的 Excel 数据放到 data/ 文件夹
 # 2. 复制配置模板
-cp config.example.yaml config/config.yaml
+cp config.example.yaml template/config.yaml
 
 # 3. 修改 config.yaml（参考下方说明）
 ```
